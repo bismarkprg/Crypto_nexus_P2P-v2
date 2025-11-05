@@ -1,10 +1,10 @@
-# Crypto Landing — Next.js 15.3.2 + TypeScript (Footer global)
+# Crypto Landing — Next.js 15.3.2 + TS (Navbar ancho = Footer)
 
-- Footer global en `components/Footer.tsx` renderizado en `app/page.tsx` (visible en todas las pestañas).
-- Tabs con estado React; CSS sin `display:none` en `.content`.
-- Rewrites a Flask (`next.config.mjs`), `.env.local.example` y placeholders en `/public/images`.
+- Barra del **navbar** ocupa todo el ancho de la pantalla, con **contenedor interno** (`.navbar-inner`) limitado a `max-width: var(--max-w)` y centrado, igual que el **footer**.
+- Diseño responsive para desktop, tablet y móvil.
+- Rewrites a Flask (`next.config.mjs`) y `.env.local.example`.
 
-## Uso
+## Cómo correr
 npm install
 cp .env.local.example .env.local
 npm run dev

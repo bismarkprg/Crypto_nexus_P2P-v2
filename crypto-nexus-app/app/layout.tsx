@@ -1,15 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
+export const metadata: Metadata = {
+  title: "Crypto",
+  description: "Portada migrada a Next.js + TS (Next 15.3.2)",
+};
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: "#1E1E1E",
-};
-export const metadata: Metadata = {
-  title: "Crypto",
-  description: "Portada migrada a Next.js + TS (Next 15.3.2)",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
