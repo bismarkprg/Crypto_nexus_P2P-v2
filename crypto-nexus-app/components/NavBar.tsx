@@ -18,7 +18,7 @@ export default function NavBar({ active, onChange }: { active: TabId; onChange: 
 
         <div className="actions">
           <a id="btn-register" className="action-btn btn-register" href={`${BACKEND}/register`}>Registrarse</a>
-          <a id="btn-login" className="action-btn btn-login" href={`${BACKEND}/login`}>Iniciar Sesión</a>
+          <a id="btn-login" className="action-btn btn-login" href="/login">Iniciar Sesión</a>
 
           <a className="action-btn" id="btn-language" href="#">
             <Image src="/images/icon/lang.png" alt="Idioma" width={30} height={30} className="btn-language" />

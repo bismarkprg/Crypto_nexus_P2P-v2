@@ -1,0 +1,141 @@
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #1E1E1E;
+}
+
+.login-container {
+  background-color: #4D4D4D;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 25px #26A17B;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+}
+
+.logo {
+  margin-bottom: 25px;
+  width: 320px;;
+}
+
+.form-group {
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #ddd;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #26A17B;
+  font-size: 14px;
+  box-sizing: border-box;
+  background-color: #3a3a3a;
+  color: white;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 6px #26A17B;
+}
+
+.password-container {
+  display: flex;
+  align-items: center;
+}
+
+#toggle-password {
+  background-color: #c7c7c7;
+  border: none;
+  border-radius: 5px;
+  margin-left: 8px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+#toggle-password:hover { background-color: #d4d4d4; }
+
+.btn-eye {
+  height: 20px;
+  width: auto;
+}
+
+.recover {
+  text-align: right;
+}
+
+.recover-link {
+  color: #26A17B;
+  font-size: 0.9rem;
+  text-decoration: underline;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+button {
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#register-button {
+  background-color: #F4C542;
+  color: #333;
+}
+
+#register-button:hover {
+  background-color: #eeb006;
+}
+
+#login-button {
+  background-color: #26A17B;
+  color: #333;
+}
+
+#login-button:hover {
+  background-color: #218838;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 25px;
+  }
+  .logo {
+    width: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 20px;
+    box-shadow: 0 3px 15px #26A17B;
+  }
+  .form-buttons {
+    flex-direction: column;
+  }
+  button {
+    width: 100%;
+  }
+}
