@@ -1,0 +1,47 @@
+
+# 1. Dependencias
+node_modules/
+
+# 2. Archivos de Entorno (¡IMPORTANTE!)
+.env
+.env.*
+# Es buena práctica mantener un archivo de ejemplo en el repo, por eso lo excluimos de la regla anterior.
+!.env.example
+
+# 3. Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lcov.info
+
+# 4. Archivos de Compilación y Distribución
+dist/
+build/
+.build/
+*.js.map
+*.tsbuildinfo
+
+# 5. Reportes de Cobertura de Pruebas (Tests)
+coverage/
+.nyc_output/
+
+# 6. Archivos del Sistema Operativo
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+
+# 7. Archivos de IDEs y Editores de Código
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.atom/
+*.swp
+
+# 8. Archivos de Caché y Temporales
+.npm/
+.pnp.*
+*.tmp
