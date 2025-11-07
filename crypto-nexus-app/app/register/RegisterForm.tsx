@@ -2,6 +2,7 @@
 import { useState } from "react";
 import PasswordField from "./PasswordField";
 import { registerUser } from "@/lib/apiService";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
   const [email, setEmail] = useState("");
@@ -10,9 +11,12 @@ export default function RegisterForm() {
   const [repeatPassword, setRepeatPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [terms, setTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (password !== repeatPassword) {
       alert("Las contraseñas no coinciden");
       return;
@@ -21,11 +25,20 @@ export default function RegisterForm() {
       alert("Debes aceptar los términos y condiciones");
       return;
     }
+
     try {
+      setLoading(true);
       const res = await registerUser(email, username, password, repeatPassword);
       alert(res.message || "Registro exitoso");
+
+      //  Loader durante la redirección
+      setTimeout(() => {
+        router.push("/register_form");
+      }, 2000);
     } catch (err: any) {
       alert(err.response?.data?.message || "Error al registrar usuario");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -99,12 +112,12 @@ export default function RegisterForm() {
         <button
           type="button"
           id="login-button"
-          onClick={() => (window.location.href = "/login")}
+          onClick={() => router.push("/login")}
         >
           Iniciar sesión
         </button>
-        <button type="submit" id="register-button">
-          Regístrate
+        <button type="submit" id="register-button" disabled={loading}>
+          {loading ? "Cargando..." : "Regístrate"}
         </button>
       </div>
     </form>
