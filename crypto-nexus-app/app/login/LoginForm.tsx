@@ -1,14 +1,33 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import PasswordInput from "@/components/PasswordInput";
+import { loginUser } from "@/lib/apiService";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Inicio de sesión exitoso");
+
+    if (!username || !password) {
+      alert("Por favor completa todos los campos");
+      return;
+    }
+
+    try {
+      const res = await loginUser(username, password);
+      if (res?.message) {
+        alert(res.message || "Inicio de sesión exitoso");
+        router.push("/dashboard"); // 🔹 Redirección al Dashboard
+      } else {
+        alert("Credenciales incorrectas");
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Error de conexión con el servidor");
+    }
   };
 
   return (
@@ -35,10 +54,16 @@ export default function LoginForm() {
       </div>
 
       <div className="form-buttons">
-        <button type="button" id="register-button" onClick={() => window.location.href='/register'}>
+        <button
+          type="button"
+          id="register-button"
+          onClick={() => router.push("/register")}
+        >
           Regístrate
         </button>
-        <button type="submit" id="login-button">Iniciar sesión</button>
+        <button type="submit" id="login-button">
+          Iniciar sesión
+        </button>
       </div>
     </form>
   );

@@ -14,18 +14,21 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* ocupa toda la altura visible */
-  background-color: #1E1E1E; /* asegura color uniforme */
+  height: 100vh;             /* ocupa toda la altura visible */
+  width: 100%;               /* asegura ancho completo */
+  background-color: #1E1E1E;
+  margin-left: 20%;
+  padding: 0;
 }
 
 /* === Caja del formulario === */
 .register-form-box {
   background-color: #4D4D4D;
-  padding: 20px 30px;
+  padding: 30px 40px;
   border-radius: 12px;
   box-shadow: 0 4px 25px #F4C542;
   width: 100%;
-  max-width: 500px;
+  max-width: 480px;
   text-align: center;
 }
 
@@ -75,6 +78,7 @@ body, html {
 
 .form-group {
   margin-bottom: 15px;
+  text-align: left;
 }
 
 .form-group input,
@@ -84,6 +88,10 @@ body, html {
   border: 1px solid #26A17B;
   border-radius: 10px;
   font-size: 1rem;
+}
+
+.welcome-message {
+  text-align: center;
 }
 
 .form-buttons {
@@ -107,14 +115,19 @@ body, html {
 }
 
 .btn-customer-service {
-        height: 30px; /* Ajusta el tamaño boton bright */
-        width: auto; /* Mantén la proporción del logotipo */
-        }
+  height: 30px; /* Ajusta el tamaño boton bright */
+  width: auto; /* Mantén la proporción del logotipo */
+}
 
 @media (max-width: 768px) {
+   .register-form-box {
+    padding: 20px;
+    max-width: 90%;
+  }
   .container {
     max-width: 90%;
     padding: 15px;
+    margin-left: 5%;
   }
   .form-buttons {
     flex-direction: column;

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["tailwindcss"],
     "target": "ES2020",
     "lib": [
       "dom",
