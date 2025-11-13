@@ -5,27 +5,50 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/user.js";
+import cryptoRoutes from "./routes/crypto.js";
 
 dotenv.config();
 const app = express();
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
+// 🔥 Middleware de sesión (DEBE IR ANTES DE CORS)
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false,        // true SOLO si estás en HTTPS
+      sameSite: "lax"       // Permite enviar cookies entre puertos
+    }
   })
 );
 
+// 🔥 CORS CORRECTAMENTE CONFIGURADO
+app.use(
+  cors({
+    origin: "http://localhost:3000",  // Frontend Next.js
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
+    credentials: true                // <-- PERMITE COOKIES
+  })
+);
+
+// Middlewares normales
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// 🔥 RUTAS
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
+app.use("/api", cryptoRoutes);
 
+
+// Test
 app.get("/", (req, res) => res.json({ message: "API funcionando correctamente" }));
 
+// Ejecutar servidor
 app.listen(process.env.PORT || 5000, () =>
   console.log(`🚀 Servidor corriendo en puerto ${process.env.PORT}`)
 );
+

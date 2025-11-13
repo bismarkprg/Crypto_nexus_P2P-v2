@@ -70,9 +70,11 @@ export async function updateUserProfile(data: {
 export async function getDashboard() {
   try {
     const res = await api.get("/dashboard");
-    return res.data;
+    return res.data; // 🔹 Retorna el objeto directo (no res.data.user)
   } catch (error: any) {
-    console.error("Error al obtener dashboard:", error.response?.data || error.message);
+    console.error("Error al obtener dashboard:", error);
     throw error;
   }
 }
+
+

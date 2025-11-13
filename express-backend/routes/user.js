@@ -49,11 +49,21 @@ router.get("/dashboard", async (req, res) => {
   if (!req.session.user_id)
     return res.status(401).json({ message: "Debe iniciar sesión" });
 
-  const [rows] = await pool.query(
-    "SELECT nombre FROM usuarios WHERE id_usuario=?",
-    [req.session.user_id]
-  );
-  res.json({ message: "Bienvenido al dashboard", user: rows[0] });
+  try {
+    const [rows] = await pool.query(
+      `SELECT nombre, balance_total, saldo_cripto, saldo_fondo_ahorro, saldo_publicacion_venta
+       FROM usuarios WHERE id_usuario=?`,
+      [req.session.user_id]
+    );
+
+    if (rows.length === 0)
+      return res.status(404).json({ message: "Usuario no encontrado" });
+
+    res.json(rows[0]); // 🔹 Devolvemos directamente los campos
+  } catch (err) {
+    res.status(500).json({ message: "Error al obtener datos", error: err.message });
+  }
 });
+
 
 export default router;
