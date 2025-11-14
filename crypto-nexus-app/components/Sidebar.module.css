@@ -1,0 +1,47 @@
+.sidebar {
+  width: 230px;
+  background-color: #111;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar-logo {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: 15px;
+}
+
+.sidebar li a {
+  color: #ccc;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.sidebar li.active a {
+  color: #F4C542;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 15%;
+    height: 100vh;
+}
+
+@media (max-width: 900px) {
+  
+  .sidebar {
+    width: 180px;
+    left: 0;
+  }
+}

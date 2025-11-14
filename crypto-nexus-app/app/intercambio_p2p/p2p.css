@@ -1,0 +1,143 @@
+.p2p-container {
+  padding: 20px;
+  color: white;
+  width: 100%;
+}
+
+/* Título */
+.titulo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Buscador */
+.p2p-search-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.p2p-search-input {
+  padding: 8px;
+  width: 200px;
+  border-radius: 6px;
+  border: none;
+}
+
+.p2p-search-btn {
+  background: #f4c542;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.p2p-sort {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Cabecera */
+.p2p-header {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+  padding: 10px 5px;
+  margin-bottom: 5px;
+  color: #c8c8c8;
+  font-size: 14px;
+}
+
+/* BLOQUES */
+.p2p-block {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+  background: #1e1e1e;
+  padding: 8px 14px !important;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #2a2a2a;
+  min-height: 60px !important;
+}
+/* Ajustar tipografía y espaciado */
+.p2p-block .anunciante-info {
+  font-size: 13px !important;
+}
+
+.p2p-block .precio {
+  font-size: 14px !important;
+}
+
+.p2p-block button {
+  padding: 6px 12px !important;
+  font-size: 13px !important;
+}
+/* ANUNCIANTE */
+.p2p-anunciante h3 {
+  margin: 0;
+}
+
+.p2p-buy-btn {
+  background: #26a17b;
+  padding: 10px 15px;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.p2p-wrapper {
+    width: 100%;
+    padding: 20px;
+}
+
+.p2p-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;   /* ⬅ Centra toda la paginación */
+  align-items: center;
+  gap: 15px;                 /* Espaciado entre botones */
+}
+
+.pagination button {
+  background-color: transparent;
+  border: 2px solid #F4C542;   /* Borde dorado */
+  color: #F4C542;              /* Texto dorado */
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #F4C542;   /* Fondo dorado al pasar */
+  color: #000;                 /* Texto negro */
+}
+
+.pagination button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-weight: 600;
+  color: #F4C542;             /* Dorado para el texto central */
+  font-size: 16px;
+}
+/* Responsive */
+@media (max-width: 900px) {
+  .p2p-header,
+  .p2p-block {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}

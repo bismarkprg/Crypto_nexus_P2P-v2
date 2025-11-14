@@ -135,6 +135,7 @@ CREATE TABLE `publicaciones_venta` (
   `cantidad_venta` decimal(18,8) DEFAULT NULL,
   `precio_venta_bob` decimal(18,2) DEFAULT NULL,
   `minimo_compra` decimal(18,2) DEFAULT NULL,
+  `maximo_compra` decimal(18,2) DEFAULT NULL,
   `imagen_qr` longblob DEFAULT NULL,
   `reglas_vendedor` text DEFAULT NULL,
   `estado` enum('activa','completada','cancelada') DEFAULT 'activa',

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import Sidebar from "./Sidebar";
-import Header from "./Header";
+import Sidebar from "../../components/Sidebar";
+import Header from "../../components/Header";
 import BalanceCard from "./BalanceCard";
 import BalanceList from "./BalanceList";
 import QuoteCard from "./QuoteCard";

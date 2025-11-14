@@ -77,4 +77,11 @@ export async function getDashboard() {
   }
 }
 
+//Pestana P2P ventas
+export async function getP2P() {
+  const res = await api.get("/p2p/listar");
+  return res.data;
+}
+
+
 
