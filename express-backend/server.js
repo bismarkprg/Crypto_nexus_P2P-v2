@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/user.js";
 import cryptoRoutes from "./routes/crypto.js";
 import p2pRoutes from "./routes/p2p.js";
+import inversionRoutes from "./routes/inversion.js";
 
 dotenv.config();
 const app = express();
@@ -48,7 +49,7 @@ app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", cryptoRoutes);
 app.use("/api", p2pRoutes);
-
+app.use("/api", inversionRoutes);
 
 // Test
 app.get("/", (req, res) => res.json({ message: "API funcionando correctamente" }));

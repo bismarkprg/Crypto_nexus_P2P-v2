@@ -51,10 +51,11 @@ router.get("/dashboard", async (req, res) => {
 
   try {
     const [rows] = await pool.query(
-      `SELECT nombre, balance_total, saldo_cripto, saldo_fondo_ahorro, saldo_publicacion_venta
-       FROM usuarios WHERE id_usuario=?`,
+      `SELECT id_usuario, nombre, balance_total, saldo_cripto, saldo_fondo_ahorro, saldo_publicacion_venta
+      FROM usuarios WHERE id_usuario=?`,
       [req.session.userId]
     );
+
 
     if (rows.length === 0)
       return res.status(404).json({ message: "Usuario no encontrado" });

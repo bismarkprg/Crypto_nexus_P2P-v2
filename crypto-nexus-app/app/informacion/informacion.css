@@ -1,0 +1,15 @@
+.info-container {
+  padding: 30px;
+}
+
+.info-content-box {
+  padding: 20px;
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 12px;
+  margin-bottom: 40px;
+}
+
+.info-footer-box {
+  margin-top: 40px;
+}
