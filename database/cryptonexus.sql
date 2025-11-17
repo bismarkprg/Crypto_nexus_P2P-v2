@@ -3,6 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
+-- Tiempo de generación: 17-11-2025 a las 20:40:29
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -23,6 +24,21 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `administradores`
+--
+
+CREATE TABLE `administradores` (
+  `id_admin` int(11) NOT NULL,
+  `nombre_admin` varchar(100) NOT NULL,
+  `email_admin` varchar(150) NOT NULL,
+  `password_admin` char(255) NOT NULL,
+  `fecha_creacion` datetime DEFAULT current_timestamp(),
+  `estado` enum('activo','inactivo') DEFAULT 'activo'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `ahorros`
 --
 
@@ -33,7 +49,26 @@ CREATE TABLE `ahorros` (
   `tasa_interes` decimal(5,2) DEFAULT 7.00,
   `fecha_inicio` datetime DEFAULT current_timestamp(),
   `fecha_fin` datetime DEFAULT NULL,
-  `estado` enum('activo','finalizado') DEFAULT 'activo'
+  `ganancia` decimal(18,2) DEFAULT NULL,
+  `tipo` enum('fijo','flexible') DEFAULT 'fijo',
+  `estado` enum('activo','finalizado') DEFAULT 'activo',
+  `tasa_aplicada` decimal(5,2) DEFAULT NULL,
+  `apy_aplicado` decimal(5,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `auditoria_eventos`
+--
+
+CREATE TABLE `auditoria_eventos` (
+  `id_evento` int(11) NOT NULL,
+  `id_usuario` int(11) DEFAULT NULL,
+  `id_admin` int(11) DEFAULT NULL,
+  `tipo_evento` varchar(100) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `fecha_evento` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -48,7 +83,8 @@ CREATE TABLE `cambios_directos` (
   `cantidad_bob` decimal(18,2) DEFAULT NULL,
   `cantidad_usdt` decimal(18,8) DEFAULT NULL,
   `comision_aplicada` decimal(5,2) DEFAULT 5.00,
-  `fecha_cambio` datetime DEFAULT current_timestamp()
+  `fecha_cambio` datetime DEFAULT current_timestamp(),
+  `id_admin` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -122,6 +158,24 @@ CREATE TRIGGER `actualizar_puntuacion_usuario` AFTER UPDATE ON `compras` FOR EAC
 END
 $$
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `parametros_financieros`
+--
+
+CREATE TABLE `parametros_financieros` (
+  `id_parametro` int(11) NOT NULL,
+  `apr_ahorro_fijo` decimal(5,2) NOT NULL,
+  `apy_ahorro_fijo` decimal(5,2) NOT NULL,
+  `apr_staking_flexible` decimal(5,2) NOT NULL,
+  `minimo_ahorro_fijo` decimal(18,2) NOT NULL,
+  `minimo_staking_flexible` decimal(18,2) NOT NULL,
+  `fecha_inicio_vigencia` date NOT NULL,
+  `fecha_registro` datetime DEFAULT current_timestamp(),
+  `id_admin` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -213,7 +267,12 @@ INSERT INTO `usuarios` (`id_usuario`, `nombre`, `nombre_completo`, `email`, `fec
 (1, 'bisk', 'Bismark Valenzuela Chamuco', 'usuario@mail.com', '2000-03-02', 'bolivia', 'la paz', 'boliviano', 'id', '8451263', '78451296', '$2a$10$QNatMUz735C9vdQtraYCbO4j8cHKufJXd8rAE1ZA.1OHrCvDDp5TK', 0, 0.00, 0.00, 0.00000000, 0.00000000, 0.00000000, 0.00000000),
 (2, 'Juan', 'Juan de dios', 'usuario2@mail.com', '2001-08-21', 'bolivia', 'cochabamba', 'boliviano', 'id', '8945623', '74628591', '$2a$10$ebmcJZ/EFRds/MXr2xhAheEybtucRURNYCeLPsAsstDtjwrN00tVi', 0, 92.00, 95.00, 250.00000000, 1000.00000000, 860.00000000, 2110.00000000),
 (3, 'Pablo', 'pablo iglesias posting', 'usuario3@mail.com', '2005-05-02', 'bolivia', 'la paz', 'boliviano', 'id', '6295485', '71122549', '$2a$10$ohYhMb9kj25.PxVxe1z0zu6FrfrIa1VXWIMnQqU8eMjbvi4AykHzC', 0, 0.00, 0.00, 0.00000000, 0.00000000, 0.00000000, 0.00000000),
-(4, 'fswefibenaofjn', 'biskmark', 'fsfnewnc@gmail.com', '2000-02-03', 'bolivia', 'la pazx', 'boliviano', 'id', '6546298', '7589462', '$2a$10$2q90NGUrdPfiTG8cFOgbTuWVwbx2NfoJ6GF9UhiRBTeQJg65gasFy', 0, 0.00, 0.00, 0.00000000, 0.00000000, 0.00000000, 0.00000000);
+(4, 'Poli', 'Policarpo Sanchez Martinez', 'usuario4@gmail.com', '2000-02-03', 'bolivia', 'la paz', 'boliviano', 'id', '6546298', '75894622', '$2a$10$2q90NGUrdPfiTG8cFOgbTuWVwbx2NfoJ6GF9UhiRBTeQJg65gasFy', 456, 100.00, 98.00, 5000.00000000, 456.00000000, 894.00000000, 6350.00000000),
+(5, 'Ana', 'Ana Pérez Gómez', 'ana.perez@mail.com', '1995-10-25', 'chile', 'santiago', 'chilena', 'CI', '9876543', '912345678', '$2a$10$QNatMUz735C9vdQtraYCbO4j8cHKufJXd8rAE1ZA.1OHrCvDDp5TK', 0, 0.00, 0.00, 150.00000000, 0.00000000, 50.00000000, 200.00000000),
+(6, 'Carlos', 'Carlos Ruiz Díaz', 'carlos.ruiz@mail.com', '1988-03-10', 'peru', 'lima', 'peruano', 'DNI', '1029384', '987654321', '$2a$10$QNatMUz735C9vdQtraYCbO4j8cHKufJXd8rAE1ZA.1OHrCvDDp5TK', 0, 0.00, 0.00, 5.50000000, 100.00000000, 0.00000000, 105.50000000),
+(7, 'Sofia', 'Sofía Vargas Flores', 'sofia.vargas@mail.com', '2003-01-05', 'bolivia', 'santa cruz', 'boliviana', 'ID', '5432109', '77788899', '$2a$10$QNatMUz735C9vdQtraYCbO4j8cHKufJXd8rAE1ZA.1OHrCvDDp5TK', 0, 0.00, 0.00, 0.00000000, 0.00000000, 0.00000000, 0.00000000),
+(8, 'Pedro', 'Pedro López Castro', 'pedro.lopez@mail.com', '1976-06-20', 'argentina', 'buenos aires', 'argentino', 'PAS', '3021456', '55512345', '$2a$10$QNatMUz735C9vdQtraYCbO4j8cHKufJXd8rAE1ZA.1OHrCvDDp5TK', 0, 0.00, 0.00, 250.00000000, 500.00000000, 250.00000000, 1000.00000000),
+(9, 'Laura', 'Laura Mendez Salas', 'laura.mendez@mail.com', '1999-12-12', 'bolivia', 'la paz', 'boliviana', 'ID', '7654321', '66611223', '$2a$10$QNatMUz735C9vdQtraYCbO4j8cHKufJXd8rAE1ZA.1OHrCvDDp5TK', 0, 0.00, 0.00, 10.00000000, 0.00000000, 0.00000000, 10.00000000);
 
 --
 -- Disparadores `usuarios`
@@ -263,6 +322,13 @@ INSERT INTO `usuario_rol` (`id_usuario`, `id_rol`, `fecha_asignacion`) VALUES
 --
 
 --
+-- Indices de la tabla `administradores`
+--
+ALTER TABLE `administradores`
+  ADD PRIMARY KEY (`id_admin`),
+  ADD UNIQUE KEY `email_admin` (`email_admin`);
+
+--
 -- Indices de la tabla `ahorros`
 --
 ALTER TABLE `ahorros`
@@ -270,11 +336,20 @@ ALTER TABLE `ahorros`
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
+-- Indices de la tabla `auditoria_eventos`
+--
+ALTER TABLE `auditoria_eventos`
+  ADD PRIMARY KEY (`id_evento`),
+  ADD KEY `id_usuario` (`id_usuario`),
+  ADD KEY `id_admin` (`id_admin`);
+
+--
 -- Indices de la tabla `cambios_directos`
 --
 ALTER TABLE `cambios_directos`
   ADD PRIMARY KEY (`id_cambio`),
-  ADD KEY `id_usuario` (`id_usuario`);
+  ADD KEY `id_usuario` (`id_usuario`),
+  ADD KEY `id_admin` (`id_admin`);
 
 --
 -- Indices de la tabla `chat_compras`
@@ -291,6 +366,13 @@ ALTER TABLE `compras`
   ADD PRIMARY KEY (`id_compra`),
   ADD KEY `id_publicacion` (`id_publicacion`),
   ADD KEY `id_comprador` (`id_comprador`);
+
+--
+-- Indices de la tabla `parametros_financieros`
+--
+ALTER TABLE `parametros_financieros`
+  ADD PRIMARY KEY (`id_parametro`),
+  ADD KEY `parametros_financieros_ibfk_1` (`id_admin`);
 
 --
 -- Indices de la tabla `publicaciones_venta`
@@ -332,16 +414,28 @@ ALTER TABLE `usuario_rol`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `administradores`
+--
+ALTER TABLE `administradores`
+  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `ahorros`
 --
 ALTER TABLE `ahorros`
-  MODIFY `id_ahorro` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_ahorro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+
+--
+-- AUTO_INCREMENT de la tabla `auditoria_eventos`
+--
+ALTER TABLE `auditoria_eventos`
+  MODIFY `id_evento` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `cambios_directos`
 --
 ALTER TABLE `cambios_directos`
-  MODIFY `id_cambio` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_cambio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT de la tabla `chat_compras`
@@ -353,13 +447,19 @@ ALTER TABLE `chat_compras`
 -- AUTO_INCREMENT de la tabla `compras`
 --
 ALTER TABLE `compras`
-  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=465;
+
+--
+-- AUTO_INCREMENT de la tabla `parametros_financieros`
+--
+ALTER TABLE `parametros_financieros`
+  MODIFY `id_parametro` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `publicaciones_venta`
 --
 ALTER TABLE `publicaciones_venta`
-  MODIFY `id_publicacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_publicacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=191;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -371,13 +471,13 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `transferencias`
 --
 ALTER TABLE `transferencias`
-  MODIFY `id_transferencia` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_transferencia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=201;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Restricciones para tablas volcadas
@@ -390,10 +490,18 @@ ALTER TABLE `ahorros`
   ADD CONSTRAINT `ahorros_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
 
 --
+-- Filtros para la tabla `auditoria_eventos`
+--
+ALTER TABLE `auditoria_eventos`
+  ADD CONSTRAINT `auditoria_eventos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`),
+  ADD CONSTRAINT `auditoria_eventos_ibfk_2` FOREIGN KEY (`id_admin`) REFERENCES `administradores` (`id_admin`);
+
+--
 -- Filtros para la tabla `cambios_directos`
 --
 ALTER TABLE `cambios_directos`
-  ADD CONSTRAINT `cambios_directos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+  ADD CONSTRAINT `cambios_directos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`),
+  ADD CONSTRAINT `cambios_directos_ibfk_2` FOREIGN KEY (`id_admin`) REFERENCES `administradores` (`id_admin`);
 
 --
 -- Filtros para la tabla `chat_compras`
@@ -408,6 +516,12 @@ ALTER TABLE `chat_compras`
 ALTER TABLE `compras`
   ADD CONSTRAINT `compras_ibfk_1` FOREIGN KEY (`id_publicacion`) REFERENCES `publicaciones_venta` (`id_publicacion`),
   ADD CONSTRAINT `compras_ibfk_2` FOREIGN KEY (`id_comprador`) REFERENCES `usuarios` (`id_usuario`);
+
+--
+-- Filtros para la tabla `parametros_financieros`
+--
+ALTER TABLE `parametros_financieros`
+  ADD CONSTRAINT `parametros_financieros_ibfk_1` FOREIGN KEY (`id_admin`) REFERENCES `administradores` (`id_admin`);
 
 --
 -- Filtros para la tabla `publicaciones_venta`

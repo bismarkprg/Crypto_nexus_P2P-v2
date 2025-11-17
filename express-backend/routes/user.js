@@ -5,7 +5,7 @@ const router = express.Router();
 
 // POST /register_form
 router.post("/register_form", async (req, res) => {
-  const userId = req.session.user_id;
+  const userId = req.session.userId;
   if (!userId) return res.status(401).json({ message: "No autenticado" });
 
   const {
@@ -46,14 +46,14 @@ router.post("/register_form", async (req, res) => {
 
 // GET /dashboard
 router.get("/dashboard", async (req, res) => {
-  if (!req.session.user_id)
+  if (!req.session.userId)
     return res.status(401).json({ message: "Debe iniciar sesión" });
 
   try {
     const [rows] = await pool.query(
       `SELECT nombre, balance_total, saldo_cripto, saldo_fondo_ahorro, saldo_publicacion_venta
        FROM usuarios WHERE id_usuario=?`,
-      [req.session.user_id]
+      [req.session.userId]
     );
 
     if (rows.length === 0)

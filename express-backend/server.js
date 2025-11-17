@@ -39,6 +39,10 @@ app.use(
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+
+//    Servir imágenes QR subidas
+app.use("/uploads_qr", express.static("uploads_qr"));
+
 // 🔥 RUTAS
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);

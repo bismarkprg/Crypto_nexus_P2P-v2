@@ -22,7 +22,7 @@ router.post("/register", async (req, res) => {
       [username, email, hashed]
     );
 
-    req.session.user_id = result.insertId;
+    req.session.userId = result.insertId;
     res.status(201).json({ message: "Usuario registrado correctamente", id: result.insertId });
   } catch (err) {
     res.status(500).json({ message: "Error al registrar", error: err.message });
@@ -43,7 +43,7 @@ router.post("/login", async (req, res) => {
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(401).json({ message: "Contraseña incorrecta" });
 
-    req.session.user_id = user.id_usuario;
+    req.session.userId = user.id_usuario;
     res.json({ message: "Login exitoso", user: { id: user.id_usuario, nombre: user.nombre } });
   } catch (err) {
     res.status(500).json({ message: "Error en el login", error: err.message });
