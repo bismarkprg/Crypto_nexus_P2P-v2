@@ -1,7 +1,8 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getSolicitudesP2P, aceptarCompra, cancelarCompra } from "@/lib/apiService";
+import { logoutUser } from "@/lib/apiService";
 
 interface HeaderProps {
   userName: string;
@@ -21,11 +22,26 @@ export default function Header({
   useEffect(() => {
     // Cargar solicitudes iniciales
     fetchSolicitudes();
-
     // Polling cada 10s
     const interval = setInterval(fetchSolicitudes, 10000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setOpenMenu(false);
+        setUserMenu(false);
+      }
+    } 
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);//Hook para cerrar menus al hacer click afuera
+
 
   const fetchSolicitudes = async () => {
     try {
@@ -56,6 +72,17 @@ export default function Header({
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logoutUser();                 // Cierre de sesión real
+      window.location.href = "/";    // redirección a la pagina de inicio
+    } catch (e) {
+      console.error("Error cerrando sesión:", e);
+    }
+  };
+
+  const [userMenu, setUserMenu] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   return (
     <header className="dashboard-header">
       <div className="user-info">
@@ -64,14 +91,20 @@ export default function Header({
         </h2>
       </div>
 
-      <div className="header-right">
+      <div className="header-right" ref={wrapperRef}>
         {/* Botón de mensajes */}
         <div className="messages-wrapper">
           <button
             className="messages-button"
             onClick={() => setOpenMenu(!openMenu)}
           >
-            💬
+            <Image
+            src="/images/icon/envelope.png"
+            alt="Icono mensajes"
+            width={35}
+            height={35}
+            className="icon"
+          />
             {solicitudes.length > 0 && (
               <span className="messages-badge">{solicitudes.length}</span>
             )}
@@ -113,14 +146,38 @@ export default function Header({
         </div>
 
         {/* Icono de usuario */}
-        <div className="user-icon">
-          <Image
-            src="/images/user_icon.png"
-            alt="Icono de usuario"
-            width={45}
-            height={45}
-            className="icon"
-          />
+        {/* Icono de usuario con menú */}
+        <div className="user-icon-wrapper">
+          <button
+            className="user-icon-button"
+            onClick={() => setUserMenu(!userMenu)}
+          >
+            <Image
+              src="/images/user_icon.png"
+              alt="Usuario"
+              width={70}
+              height={70}
+              className="icon"
+            />
+          </button>
+
+          {userMenu && (
+            <div className="user-dropdown">
+              <button
+                className="user-dropdown-item"
+                onClick={() => window.location.href = "/perfil"}   // ← ajusta la ruta si deseas otra
+              >
+                Editar perfil
+              </button>
+
+              <button
+                className="user-dropdown-item logout"
+                onClick={handleLogout}
+              >
+                Cerrar sesión
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

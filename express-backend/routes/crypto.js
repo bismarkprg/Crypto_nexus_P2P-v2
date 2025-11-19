@@ -1,11 +1,21 @@
 import express from "express";
 import axios from "axios";
+import https from "https";
 
 const router = express.Router();
 
 router.get("/cotizacion-usdt", async (req, res) => {
   try {
-    const response = await axios.get("https://criptoya.com/api/USDT/BOB/0.1");
+
+    const response = await axios.get(
+      "https://criptoya.com/api/USDT/BOB/0.1",
+      {
+        timeout: 4000,
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false
+        })
+      }
+    );
     const raw = response.data;
 
     // Convertir en lista de plataformas

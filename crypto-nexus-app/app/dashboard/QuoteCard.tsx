@@ -13,7 +13,7 @@ export default function QuoteCard() {
   useEffect(() => {
     const fetchQuote = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/cotizacion-usdt", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/cotizacion-usdt`, {
           credentials: "include"
         });
 

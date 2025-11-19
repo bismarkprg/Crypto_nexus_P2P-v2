@@ -179,3 +179,273 @@
 .cotizacion-table tr:nth-child(even) td {
   background-color: #242424;
 }
+
+
+/* ================================
+   ESTILOS PARA MENÚ DE MENSAJES
+   ================================ */
+
+/* CONTENEDOR DEL BOTÓN */
+.messages-wrapper {
+  position: relative;
+  margin-right: 20px;
+}
+
+/* BOTÓN DEL ICONO   */
+.messages-button {
+  position: relative;
+  background-color: #2A2A2A;
+  border: 1px solid #F4C542;
+  color: #F4C542;
+  font-size: 22px;
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 8px rgba(244,197,66,0.4);
+}
+
+.messages-button:hover {
+  background-color: #F4C542;
+  color: #1E1E1E;
+}
+
+/* BADGE DE NOTIFICACIONES */
+.messages-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #E53935;
+  color: white;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 50%;
+  font-weight: bold;
+  box-shadow: 0 0 5px red;
+}
+
+/* DROPDOWN GENERAL */
+.messages-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 340px;
+  background-color: #1E1E1E;
+  border: 1px solid #F4C542;
+  border-radius: 10px;
+  padding: 15px;
+  z-index: 100;
+  box-shadow: 0 0 15px rgba(244,197,66,0.3);
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* TEXTO VACÍO */
+.messages-dropdown .empty {
+  text-align: center;
+  padding: 20px 10px;
+  color: #bbb;
+  font-size: 0.9rem;
+}
+
+/* CADA SOLICITUD */
+.messages-item {
+  padding: 12px;
+  background-color: #2A2A2A;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  border-left: 3px solid #F4C542;
+}
+
+.messages-item:last-child {
+  margin-bottom: 0;
+}
+
+.messages-info {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.messages-info strong {
+  color: #F4C542;
+  font-size: 1rem;
+  margin-bottom: 5px;
+}
+
+.messages-info span {
+  color: #ccc;
+  font-size: 0.85rem;
+}
+
+/* ACCIONES */
+.messages-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.messages-actions .btn-secondary {
+  background-color: transparent;
+  border: 1px solid #E53935;
+  color: #E53935;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.messages-actions .btn-secondary:hover {
+  background-color: #E53935;
+  color: white;
+}
+
+.messages-actions .btn-primary {
+  background-color: #26A17B;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.messages-actions .btn-primary:hover {
+  background-color: #1e825f;
+}
+
+/* ================================
+   MENÚ DESPLEGABLE DEL USUARIO
+   ================================ */
+
+.user-icon-wrapper {
+  position: relative;
+}
+
+.user-icon-button {
+  background-color: #2A2A2A;
+  border: 1px solid #F4C542;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(244,197,66,0.4);
+}
+
+.user-icon-button:hover {
+  background-color: #F4C542;
+}
+
+.user-icon-button:hover .icon {
+  filter: brightness(90%);
+}
+
+/* Dropdown */
+.user-dropdown {
+  position: absolute;
+  top: 55px;
+  right: 0;
+  width: 180px;
+  background-color: #1E1E1E;
+  border: 1px solid #F4C542;
+  border-radius: 10px;
+  padding: 10px;
+  z-index: 100;
+  box-shadow: 0 0 15px rgba(244,197,66,0.3);
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.user-dropdown-item {
+  width: 100%;
+  background-color: #2A2A2A;
+  color: #F4C542;
+  border: none;
+  padding: 10px;
+  text-align: left;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  transition: 0.3s;
+}
+
+.user-dropdown-item:hover {
+  background-color: #F4C542;
+  color: #1E1E1E;
+}
+
+.user-dropdown-item.logout {
+  border: 1px solid #E53935;
+  color: #E53935;
+}
+
+.user-dropdown-item.logout:hover {
+  background-color: #E53935;
+  color: white;
+}
+
+
+
+/* ======================================
+   ALINEAR BOTÓN DE MENSAJES + USER ICON
+   ====================================== */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;       /* Separación entre icono y botón */
+}
+
+.user-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-icon .icon {
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+
+/* ============================
+   RESPONSIVE USER + MESSAGE MENU
+   ============================ */
+
+@media (max-width: 600px) {
+  .header-right {
+    gap: 10px;
+  }
+
+  .messages-dropdown,
+  .user-dropdown {
+    width: 260px;
+    top: 55px;
+    right: 0;
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  .messages-button {
+    font-size: 18px;
+    padding: 8px 10px;
+  }
+
+  .user-icon-button {
+    width: 42px;
+    height: 42px;
+  }
+
+  .user-dropdown-item {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+}
