@@ -47,6 +47,7 @@ export const config = {
   matcher: [
     "/dashboard/:path*",
     "/inversion/:path*",
+    "/informacion/:path*",
     "/intercambio_p2p/:path*",
     "/mis_publicaciones/:path*",
   ],

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-11-2025 a las 20:40:29
+-- Tiempo de generación: 18-11-2025 a las 22:18:11
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -35,6 +35,13 @@ CREATE TABLE `administradores` (
   `fecha_creacion` datetime DEFAULT current_timestamp(),
   `estado` enum('activo','inactivo') DEFAULT 'activo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `administradores`
+--
+
+INSERT INTO `administradores` (`id_admin`, `nombre_admin`, `email_admin`, `password_admin`, `fecha_creacion`, `estado`) VALUES
+(1, 'bismark', 'admin1@gmail.com', '123456', '2025-11-17 17:44:35', 'activo');
 
 -- --------------------------------------------------------
 
@@ -105,6 +112,23 @@ CREATE TABLE `chat_compras` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `comisiones_globales`
+--
+
+CREATE TABLE `comisiones_globales` (
+  `id_comision` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `tipo_operacion` enum('cambio_directo','p2p_compra','p2p_venta','transferencia','ahorro_fijo','staking_flexible','retiro','deposito') NOT NULL,
+  `id_referencia` int(11) NOT NULL,
+  `monto_usdt` decimal(18,8) NOT NULL,
+  `porcentaje_comision` decimal(5,2) DEFAULT NULL,
+  `fecha_registro` datetime DEFAULT current_timestamp(),
+  `id_admin` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `compras`
 --
 
@@ -116,6 +140,7 @@ CREATE TABLE `compras` (
   `fecha_compra` datetime DEFAULT current_timestamp(),
   `estado` enum('en progreso','completada','cancelada') DEFAULT 'en progreso'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 --
 -- Disparadores `compras`
@@ -167,6 +192,7 @@ DELIMITER ;
 
 CREATE TABLE `parametros_financieros` (
   `id_parametro` int(11) NOT NULL,
+  `taza_comision` decimal(5,3) NOT NULL,
   `apr_ahorro_fijo` decimal(5,2) NOT NULL,
   `apy_ahorro_fijo` decimal(5,2) NOT NULL,
   `apr_staking_flexible` decimal(5,2) NOT NULL,
@@ -176,6 +202,14 @@ CREATE TABLE `parametros_financieros` (
   `fecha_registro` datetime DEFAULT current_timestamp(),
   `id_admin` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `parametros_financieros`
+--
+
+INSERT INTO `parametros_financieros` (`id_parametro`, `taza_comision`, `apr_ahorro_fijo`, `apy_ahorro_fijo`, `apr_staking_flexible`, `minimo_ahorro_fijo`, `minimo_staking_flexible`, `fecha_inicio_vigencia`, `fecha_registro`, `id_admin`) VALUES
+(1, 0.000, 0.07, 0.08, 0.05, 100.00, 150.00, '2025-11-17', '2025-11-17 17:45:15', NULL),
+(2, 0.000, 0.08, 0.08, 0.05, 100.00, 149.00, '2025-11-18', '2025-11-18 07:50:05', 1);
 
 -- --------------------------------------------------------
 
@@ -267,12 +301,7 @@ INSERT INTO `usuarios` (`id_usuario`, `nombre`, `nombre_completo`, `email`, `fec
 (1, 'bisk', 'Bismark Valenzuela Chamuco', 'usuario@mail.com', '2000-03-02', 'bolivia', 'la paz', 'boliviano', 'id', '8451263', '78451296', '$2a$10$QNatMUz735C9vdQtraYCbO4j8cHKufJXd8rAE1ZA.1OHrCvDDp5TK', 0, 0.00, 0.00, 0.00000000, 0.00000000, 0.00000000, 0.00000000),
 (2, 'Juan', 'Juan de dios', 'usuario2@mail.com', '2001-08-21', 'bolivia', 'cochabamba', 'boliviano', 'id', '8945623', '74628591', '$2a$10$ebmcJZ/EFRds/MXr2xhAheEybtucRURNYCeLPsAsstDtjwrN00tVi', 0, 92.00, 95.00, 250.00000000, 1000.00000000, 860.00000000, 2110.00000000),
 (3, 'Pablo', 'pablo iglesias posting', 'usuario3@mail.com', '2005-05-02', 'bolivia', 'la paz', 'boliviano', 'id', '6295485', '71122549', '$2a$10$ohYhMb9kj25.PxVxe1z0zu6FrfrIa1VXWIMnQqU8eMjbvi4AykHzC', 0, 0.00, 0.00, 0.00000000, 0.00000000, 0.00000000, 0.00000000),
-(4, 'Poli', 'Policarpo Sanchez Martinez', 'usuario4@gmail.com', '2000-02-03', 'bolivia', 'la paz', 'boliviano', 'id', '6546298', '75894622', '$2a$10$2q90NGUrdPfiTG8cFOgbTuWVwbx2NfoJ6GF9UhiRBTeQJg65gasFy', 456, 100.00, 98.00, 5000.00000000, 456.00000000, 894.00000000, 6350.00000000),
-(5, 'Ana', 'Ana Pérez Gómez', 'ana.perez@mail.com', '1995-10-25', 'chile', 'santiago', 'chilena', 'CI', '9876543', '912345678', '$2a$10$QNatMUz735C9vdQtraYCbO4j8cHKufJXd8rAE1ZA.1OHrCvDDp5TK', 0, 0.00, 0.00, 150.00000000, 0.00000000, 50.00000000, 200.00000000),
-(6, 'Carlos', 'Carlos Ruiz Díaz', 'carlos.ruiz@mail.com', '1988-03-10', 'peru', 'lima', 'peruano', 'DNI', '1029384', '987654321', '$2a$10$QNatMUz735C9vdQtraYCbO4j8cHKufJXd8rAE1ZA.1OHrCvDDp5TK', 0, 0.00, 0.00, 5.50000000, 100.00000000, 0.00000000, 105.50000000),
-(7, 'Sofia', 'Sofía Vargas Flores', 'sofia.vargas@mail.com', '2003-01-05', 'bolivia', 'santa cruz', 'boliviana', 'ID', '5432109', '77788899', '$2a$10$QNatMUz735C9vdQtraYCbO4j8cHKufJXd8rAE1ZA.1OHrCvDDp5TK', 0, 0.00, 0.00, 0.00000000, 0.00000000, 0.00000000, 0.00000000),
-(8, 'Pedro', 'Pedro López Castro', 'pedro.lopez@mail.com', '1976-06-20', 'argentina', 'buenos aires', 'argentino', 'PAS', '3021456', '55512345', '$2a$10$QNatMUz735C9vdQtraYCbO4j8cHKufJXd8rAE1ZA.1OHrCvDDp5TK', 0, 0.00, 0.00, 250.00000000, 500.00000000, 250.00000000, 1000.00000000),
-(9, 'Laura', 'Laura Mendez Salas', 'laura.mendez@mail.com', '1999-12-12', 'bolivia', 'la paz', 'boliviana', 'ID', '7654321', '66611223', '$2a$10$QNatMUz735C9vdQtraYCbO4j8cHKufJXd8rAE1ZA.1OHrCvDDp5TK', 0, 0.00, 0.00, 10.00000000, 0.00000000, 0.00000000, 10.00000000);
+(4, 'Poli', 'Policarpo Sanchez Martinez', 'usuario4@gmail.com', '2000-02-03', 'bolivia', 'la paz', 'boliviano', 'id', '6546298', '75894622', '$2a$10$2q90NGUrdPfiTG8cFOgbTuWVwbx2NfoJ6GF9UhiRBTeQJg65gasFy', 456, 100.00, 98.00, 5000.00000000, 456.00000000, 894.00000000, 6350.00000000);
 
 --
 -- Disparadores `usuarios`
@@ -360,6 +389,14 @@ ALTER TABLE `chat_compras`
   ADD KEY `emisor` (`emisor`);
 
 --
+-- Indices de la tabla `comisiones_globales`
+--
+ALTER TABLE `comisiones_globales`
+  ADD PRIMARY KEY (`id_comision`),
+  ADD KEY `id_usuario` (`id_usuario`),
+  ADD KEY `id_admin` (`id_admin`);
+
+--
 -- Indices de la tabla `compras`
 --
 ALTER TABLE `compras`
@@ -417,7 +454,7 @@ ALTER TABLE `usuario_rol`
 -- AUTO_INCREMENT de la tabla `administradores`
 --
 ALTER TABLE `administradores`
-  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `ahorros`
@@ -444,6 +481,12 @@ ALTER TABLE `chat_compras`
   MODIFY `id_chat` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `comisiones_globales`
+--
+ALTER TABLE `comisiones_globales`
+  MODIFY `id_comision` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `compras`
 --
 ALTER TABLE `compras`
@@ -453,7 +496,7 @@ ALTER TABLE `compras`
 -- AUTO_INCREMENT de la tabla `parametros_financieros`
 --
 ALTER TABLE `parametros_financieros`
-  MODIFY `id_parametro` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_parametro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `publicaciones_venta`
@@ -509,6 +552,13 @@ ALTER TABLE `cambios_directos`
 ALTER TABLE `chat_compras`
   ADD CONSTRAINT `chat_compras_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`),
   ADD CONSTRAINT `chat_compras_ibfk_2` FOREIGN KEY (`emisor`) REFERENCES `usuarios` (`id_usuario`);
+
+--
+-- Filtros para la tabla `comisiones_globales`
+--
+ALTER TABLE `comisiones_globales`
+  ADD CONSTRAINT `comisiones_globales_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`),
+  ADD CONSTRAINT `comisiones_globales_ibfk_2` FOREIGN KEY (`id_admin`) REFERENCES `administradores` (`id_admin`);
 
 --
 -- Filtros para la tabla `compras`

@@ -85,3 +85,54 @@ export async function getP2P() {
 
 
 
+
+// Parámetros financieros (último registro)
+export async function getParametros() {
+  const res = await api.get("/p2p/parametros");
+  return res.data;
+}
+
+// Crear compra P2P
+export async function crearCompraP2P(id_publicacion: number, monto_bob: number) {
+  const res = await api.post("/p2p/comprar", { id_publicacion, monto_bob });
+  return res.data;
+}
+
+// Solicitudes pendientes para el proveedor
+export async function getSolicitudesP2P() {
+  const res = await api.get("/p2p/solicitudes");
+  return res.data;
+}
+
+export async function aceptarCompra(id_compra: number) {
+  const res = await api.post(`/p2p/compras/${id_compra}/aceptar`);
+  return res.data;
+}
+
+export async function cancelarCompra(id_compra: number) {
+  const res = await api.post(`/p2p/compras/${id_compra}/cancelar`);
+  return res.data;
+}
+
+export async function getDetalleCompra(id_compra: number) {
+  const res = await api.get(`/p2p/compras/${id_compra}/detalle`);
+  return res.data;
+}
+
+// Chat
+export async function getChatMensajes(id_compra: number) {
+  const res = await api.get(`/p2p/chat/${id_compra}`);
+  return res.data;
+}
+
+export async function enviarChatMensaje(id_compra: number, mensaje: string) {
+  const res = await api.post(`/p2p/chat/${id_compra}`, { mensaje });
+  return res.data;
+}
+
+export async function completarCompra(id_compra: number) {
+  const res = await api.post(`/p2p/compras/${id_compra}/completar`);
+  return res.data;
+}
+
+

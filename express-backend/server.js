@@ -26,10 +26,15 @@ app.use(
   })
 );
 
-// 🔥 CORS CORRECTAMENTE CONFIGURADO
+// 🔥 CORS PARA HOST + VM + LOCALHOST
+const FRONTEND_HOST = process.env.FRONTEND_HOST || "http://localhost:3000";
+
 app.use(
   cors({
-    origin: "http://localhost:3000",  // Frontend Next.js
+    origin: [
+      "http://192.168.56.1:3000",             // IP real del host (LAN)
+      "http://localhost:3000",   // Para desarrollo normal
+      ],  // Frontend Next.js
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
     credentials: true                // <-- PERMITE COOKIES
@@ -44,6 +49,9 @@ app.use(bodyParser.json());
 //    Servir imágenes QR subidas
 app.use("/uploads_qr", express.static("uploads_qr"));
 
+// Servir comprobantes
+app.use("/uploads_vouchers", express.static("uploads_vouchers"));
+
 // 🔥 RUTAS
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
@@ -54,8 +62,15 @@ app.use("/api", inversionRoutes);
 // Test
 app.get("/", (req, res) => res.json({ message: "API funcionando correctamente" }));
 
-// Ejecutar servidor
-app.listen(process.env.PORT || 5000, () =>
-  console.log(`🚀 Servidor corriendo en puerto ${process.env.PORT}`)
-);
 
+//LEVANTAR SERVIDOR EN 0.0.0.0 para acceso LAN
+const PORT = process.env.PORT || 3001;
+
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🔥 Backend escuchando en:
+  → Local:   http://localhost:${PORT}
+  → Red LAN: http://192.168.56.1:${PORT}
+
+  Corriendo`);
+});
