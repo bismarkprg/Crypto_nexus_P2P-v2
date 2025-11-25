@@ -6,7 +6,7 @@ import { pool } from "../db.js";
 const router = express.Router();
 
 /* ============================
-   🔐 MIDDLEWARE: verificar sesión
+    MIDDLEWARE: verificar sesión
    ============================ */
 function requireLogin(req, res, next) {
   if (!req.session || !req.session.userId) {
@@ -16,7 +16,7 @@ function requireLogin(req, res, next) {
 }
 
 /* ==================================
-   📁 CONFIGURACIÓN MULTER (Subir QR)
+    CONFIGURACIÓN MULTER (Subir QR)
    ================================== */
 
 const storage = multer.diskStorage({
@@ -31,7 +31,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 /* =====================================================
-   1️⃣ LISTAR PUBLICACIONES ACTIVAS (Intercambio P2P)
+   1️ LISTAR PUBLICACIONES ACTIVAS (Intercambio P2P)
    ===================================================== */
 
 router.get("/p2p/listar", async (req, res) => {
@@ -64,7 +64,7 @@ router.get("/p2p/listar", async (req, res) => {
 });
 
 /* =====================================================
-   2️⃣ CREAR PUBLICACIÓN DEL USUARIO
+   2️ CREAR PUBLICACIÓN DEL USUARIO
    ===================================================== */
 
 router.post("/p2p/crear_publicacion", requireLogin, upload.single("imagen_qr"), async (req, res) => {
@@ -107,7 +107,7 @@ router.post("/p2p/crear_publicacion", requireLogin, upload.single("imagen_qr"), 
 });
 
 /* =====================================================
-   3️⃣ LISTAR PUBLICACIONES ACTIVAS DEL USUARIO
+   3️ LISTAR PUBLICACIONES ACTIVAS DEL USUARIO
    ===================================================== */
 
 router.get("/p2p/mis_publicaciones", requireLogin, async (req, res) => {
@@ -130,7 +130,7 @@ router.get("/p2p/mis_publicaciones", requireLogin, async (req, res) => {
 });
 
 /* =====================================================
-   4️⃣ CANCELAR PUBLICACIÓN (estado → cancelada)
+   4️ CANCELAR PUBLICACIÓN (estado → cancelada)
    ===================================================== */
 
 router.put("/p2p/cancelar_publicacion/:id", requireLogin, async (req, res) => {

@@ -12,7 +12,7 @@ import inversionRoutes from "./routes/inversion.js";
 dotenv.config();
 const app = express();
 
-// 🔥 Middleware de sesión (DEBE IR ANTES DE CORS)
+//  Middleware de sesión (DEBE IR ANTES DE CORS)
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -26,7 +26,7 @@ app.use(
   })
 );
 
-// 🔥 CORS PARA HOST + VM + LOCALHOST
+//  CORS PARA HOST + VM + LOCALHOST
 const FRONTEND_HOST = process.env.FRONTEND_HOST || "http://localhost:3000";
 
 app.use(
