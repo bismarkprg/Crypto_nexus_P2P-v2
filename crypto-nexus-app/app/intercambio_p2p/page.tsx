@@ -292,52 +292,60 @@ export default function IntercambioP2P() {
       {/* MODAL COMPRA */}
       {showBuyModal && selectedPub && (
         <div className="modal-overlay">
-          <div className="modal">
-            <h3>Comprar USDT</h3>
-            <p>
-              <strong>Precio:</strong>{" "}
-              {Number(selectedPub.precio_venta_bob).toFixed(2)} BOB
-            </p>
-            <p className="comision-text">
-              Comisión: {tasaComision} USDT (monto fijo)
-            </p>
+          <div className="modal-box modal-premium">
 
-            <div className="field">
+            {/* Botón X */}
+            <button className="modal-close" onClick={() => setShowBuyModal(false)}>
+              ✕
+            </button>
+
+            <h2 className="modal-title">Comprar USDT</h2>
+
+            {/* DATOS BÁSICOS */}
+            <div className="modal-section">
+              <p><strong>Precio:</strong> {Number(selectedPub.precio_venta_bob).toFixed(2)} BOB</p>
+              <p><strong>Comisión:</strong> {tasaComision} USDT</p>
+            </div>
+
+            {/* Pagarás */}
+            <div className="modal-field">
               <label>Pagarás</label>
-              <div className="field-inline">
+              <div className="modal-input-group">
                 <input
                   type="number"
                   value={montoPagar}
                   onChange={(e) => setMontoPagar(Number(e.target.value))}
                 />
-                <span>BOB</span>
+                <span className="input-addon">BOB</span>
               </div>
             </div>
 
-            <div className="field">
+            {/* Recibirás */}
+            <div className="modal-field">
               <label>Recibirás</label>
-              <div className="field-inline">
-                <input type="number" value={recibiras} readOnly />
-                <span>USDT</span>
+              <div className="modal-input-group">
+                <input type="text" value={recibiras.toFixed(6)} readOnly />
+                <span className="input-addon">USDT</span>
               </div>
             </div>
 
-            <div className="condiciones">
-              <h4>Condiciones del anunciante</h4>
+            {/* CONDICIONES ANUNCIANTE */}
+            <div className="modal-section reglas-box">
+              <h3>Condiciones del anunciante</h3>
               <p>{selectedPub.reglas_vendedor}</p>
             </div>
 
-            <div className="modal-actions">
-              <button
-                className="btn-secondary"
-                onClick={() => setShowBuyModal(false)}
-              >
+            {/* BOTONES */}
+            <div className="modal-buttons">
+              <button className="btn-cancel" onClick={() => setShowBuyModal(false)}>
                 Cancelar
               </button>
-              <button className="btn-primary" onClick={confirmarCompra}>
+
+              <button className="btn-buy" onClick={confirmarCompra}>
                 Comprar USDT
               </button>
             </div>
+
           </div>
         </div>
       )}
@@ -345,13 +353,16 @@ export default function IntercambioP2P() {
       {/* MODAL ESPERANDO PROVEEDOR */}
       {showWaiting && (
         <div className="modal-overlay">
-          <div className="modal">
-            <h3>Esperando la confirmación del proveedor…</h3>
-            <p>Tu solicitud ha sido enviada. Cuando el proveedor acepte, se abrirá el chat.</p>
+          <div className="modal-box">
+
+            <h3 className="modal-title">Esperando confirmación…</h3>
+            <p>Cuando el proveedor acepte, se abrirá el chat automáticamente.</p>
+
             <div className="loader" />
-            <div className="modal-actions">
+
+            <div className="modal-buttons">
               <button
-                className="btn-secondary"
+                className="btn-cancel"
                 onClick={() => {
                   if (compraId) cancelarCompra(compraId);
                   setShowWaiting(false);
@@ -359,14 +370,16 @@ export default function IntercambioP2P() {
               >
                 Cancelar
               </button>
+
               <button
-                className="btn-primary"
+                className="btn-buy"
                 onClick={abrirChatComoComprador}
                 disabled={!compraId}
               >
-                Ir al chat (si ya aceptó)
+                Ir al chat
               </button>
             </div>
+
           </div>
         </div>
       )}
@@ -374,42 +387,25 @@ export default function IntercambioP2P() {
       {/* MODAL CHAT */}
       {showChat && compraId && (
         <div className="modal-overlay">
-          <div className="modal modal-chat">
+          <div className="modal-box modal-chat">
             <div className="chat-header">
-              <h3>Chat de compra #{compraId}</h3>
-              <span className="timer">
-                Tiempo restante: {formatTime(tiempoRestante)}
-              </span>
+              <h3 className="modal-title">Chat de compra #{compraId}</h3>
+              <span className="timer">Tiempo: {formatTime(tiempoRestante)}</span>
             </div>
 
             <p className="warning">
               ⚠ No presionar <strong>Completado</strong> hasta confirmar la transacción.
             </p>
 
-            {/* Aquí podrías mostrar Condiciones del anunciante y QR usando getDetalleCompra si lo deseas */}
-
             <div className="chat-messages">
               {chatMensajes.map((m) => (
-                <div
-                  key={m.id_chat}
-                  className={`chat-message ${
-                    m.es_mio ? "mine" : "theirs"
-                  }`}
-                >
+                <div key={m.id_chat} className={`chat-message ${m.es_mio ? "mine" : "theirs"}`}>
                   <p>{m.mensaje}</p>
                   <span className="time">
                     {new Date(m.timestamp).toLocaleTimeString()}
                   </span>
                 </div>
               ))}
-            </div>
-
-            <div className="chat-upload">
-              <label>
-                Sube tu comprobante (opcional) en caso de reclamos:
-              </label>
-              <input type="file" disabled />{" "}
-              {/* Implementar upload en siguiente iteración */}
             </div>
 
             <div className="chat-input">
@@ -419,28 +415,19 @@ export default function IntercambioP2P() {
                 onChange={(e) => setNuevoMensaje(e.target.value)}
                 placeholder="Escribe un mensaje…"
               />
-              <button className="btn-primary" onClick={enviarMensaje}>
-                Enviar
-              </button>
+              <button className="btn-buy" onClick={enviarMensaje}>Enviar</button>
             </div>
 
-            <div className="modal-actions">
-              <button
-                className="btn-secondary"
-                onClick={handleCancelarChat}
-              >
-                Cancelar
-              </button>
-              <button
-                className="btn-primary"
-                onClick={handleCompletarChat}
-              >
-                Completado
-              </button>
+            <div className="modal-buttons">
+              <button className="btn-cancel" onClick={handleCancelarChat}>Cancelar</button>
+              <button className="btn-buy" onClick={handleCompletarChat}>Completado</button>
             </div>
+
           </div>
+
         </div>
       )}
+
     </div>
   );
 }

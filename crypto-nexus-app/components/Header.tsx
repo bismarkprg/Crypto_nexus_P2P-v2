@@ -53,15 +53,26 @@ export default function Header({
   };
 
   const handleAceptar = async (id_compra: number) => {
-    try {
-      await aceptarCompra(id_compra);
-      await fetchSolicitudes();
-      setOpenMenu(false);
-      onOpenChat && onOpenChat(id_compra);
-    } catch (e) {
-      console.error("Error aceptando compra", e);
+  try {
+    // 1. Marcar en backend que la compra fue aceptada
+    const res = await aceptarCompra(id_compra);
+
+    // 2. Actualizar las solicitudes del vendedor
+    await fetchSolicitudes();
+
+    // 3. Cerrar el menú emergente de notificación
+    setOpenMenu(false);
+
+    // 4. Abrir chat en page.tsx (MODAL CHAT)
+    if (onOpenChat) {
+      onOpenChat(id_compra);
     }
-  };
+
+  } catch (e) {
+    console.error("Error aceptando compra", e);
+  }
+};
+
 
   const handleCancelar = async (id_compra: number) => {
     try {

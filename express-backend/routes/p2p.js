@@ -43,6 +43,8 @@ router.get("/p2p/listar", async (req, res) => {
         pv.cantidad_venta,
         pv.minimo_compra,
         pv.maximo_compra,
+        pv.reglas_vendedor,
+        pv.imagen_qr,
         u.id_usuario,
         u.nombre,
         u.numero_ordenes_venta,
