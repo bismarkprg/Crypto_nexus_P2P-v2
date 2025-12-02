@@ -17,11 +17,14 @@ import {
   enviarChatMensaje,
   cancelarCompra,
   completarCompra,
+  subirVoucher,
+  getUserSession,
 } from "@/lib/apiService";
 
 export default function IntercambioP2P() {
   const [publicaciones, setPublicaciones] = useState<any[]>([]);
   const [orden, setOrden] = useState("precio");
+  const [usuarioActual, setUsuarioActual] = useState<any>(null);
 
   // Paginación
   const [paginaActual, setPaginaActual] = useState(1);
@@ -41,8 +44,27 @@ export default function IntercambioP2P() {
   // Chat
   const [showChat, setShowChat] = useState(false);
   const [chatMensajes, setChatMensajes] = useState<any[]>([]);
+  const [detalleCompra, setDetalleCompra] = useState<any | null>(null);
   const [nuevoMensaje, setNuevoMensaje] = useState("");
   const [tiempoRestante, setTiempoRestante] = useState<number>(0); // en segundos
+  
+  // Voucher
+  const [voucherFile, setVoucherFile] = useState<File | null>(null);
+  const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL || "";
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const cargarUsuario = async () => {
+      try {
+        const u = await getUserSession();
+        setUsuarioActual(u);
+      } catch (e) {
+        console.error("Error obteniendo usuario actual", e);
+      }
+    };
+    cargarUsuario();
+  }, []);
+
 
   // --------------------------------------------
   // Cargar P2P
@@ -192,6 +214,8 @@ export default function IntercambioP2P() {
     setCompraId(id_compra);
     setShowWaiting(false);
     setShowChat(true);
+    const detalle = await getDetalleCompra(id_compra);   // ✔ NUEVO
+    setDetalleCompra(detalle);                           // ✔ NUEVO
     await loadChat(id_compra);
   };
 
@@ -200,6 +224,9 @@ export default function IntercambioP2P() {
     if (!compraId) return;
     setShowWaiting(false);
     setShowChat(true);
+    const detalle = await getDetalleCompra(compraId);     // ✔ NUEVO
+    setDetalleCompra(detalle);                            // ✔ NUEVO
+
     await loadChat(compraId);
   };
 
@@ -212,7 +239,21 @@ export default function IntercambioP2P() {
       .toString()
       .padStart(2, "0")}`;
   };
+  const enviarVoucher = async () => {
+    if (!voucherFile || !compraId) return;
 
+    try {
+      await subirVoucher(compraId, voucherFile);
+      setVoucherFile(null);
+      await loadChat(compraId);
+    } catch (e) {
+      console.error("Error enviando voucher:", e);
+    }
+  };
+  const soyComprador =
+  usuarioActual &&
+  detalleCompra &&
+  usuarioActual.id_usuario === detalleCompra.id_comprador;
   return (
     <div className="dashboard-container">
       <Sidebar />
@@ -388,6 +429,8 @@ export default function IntercambioP2P() {
       {showChat && compraId && (
         <div className="modal-overlay">
           <div className="modal-box modal-chat">
+
+            {/* HEADER DEL CHAT */}
             <div className="chat-header">
               <h3 className="modal-title">Chat de compra #{compraId}</h3>
               <span className="timer">Tiempo: {formatTime(tiempoRestante)}</span>
@@ -397,17 +440,67 @@ export default function IntercambioP2P() {
               ⚠ No presionar <strong>Completado</strong> hasta confirmar la transacción.
             </p>
 
+            {/* QR DEL VENDEDOR (solo si existe) */}
+            {soyComprador && detalleCompra?.imagen_qr && (
+              <div className="qr-box">
+                <img
+                  src={`${backendURL.replace("/api","")}/uploads_qr/${detalleCompra.imagen_qr}`}
+                  className="qr-img chat-qr"
+                  onClick={() =>
+                    setPreviewImage(
+                      `${backendURL.replace("/api","")}/uploads_qr/${detalleCompra.imagen_qr}`
+                    )
+                  }
+                />
+              </div>
+            )}
+
+            {/* MENSAJES DEL CHAT */}
             <div className="chat-messages">
+
               {chatMensajes.map((m) => (
-                <div key={m.id_chat} className={`chat-message ${m.es_mio ? "mine" : "theirs"}`}>
-                  <p>{m.mensaje}</p>
+                <div
+                  key={m.id_chat}
+                  className={`chat-message ${m.es_mio ? "mine" : "theirs"}`}
+                >
+                  {/* MENSAJE DE TEXTO */}
+                  {m.mensaje && <p>{m.mensaje}</p>}
+
+                  {/* VOUCHER */}
+                  {m.imagen_voucher && typeof m.imagen_voucher === "string" && (
+                    <div className="voucher-bubble">
+                      {m.imagen_voucher.toLowerCase().endsWith(".pdf") ? (
+                        <a
+                          href={`${backendURL.replace("/api", "")}/uploads_vouchers/${m.imagen_voucher}`}
+                          target="_blank"
+                          className="voucher-pdf"
+                        >
+                          📄 Ver PDF
+                        </a>
+                      ) : (
+                        <img
+                          src={`${backendURL.replace("/api", "")}/uploads_vouchers/${m.imagen_voucher}`}
+                          className="voucher-img"
+                          alt="voucher"
+                          onClick={() =>
+                            setPreviewImage(
+                              `${backendURL.replace("/api", "")}/uploads_vouchers/${m.imagen_voucher}`
+                            )
+                          }
+                        />
+                      )}
+                    </div>
+                  )}
+
                   <span className="time">
                     {new Date(m.timestamp).toLocaleTimeString()}
                   </span>
                 </div>
               ))}
+
             </div>
 
+            {/* INPUT DE MENSAJE */}
             <div className="chat-input">
               <input
                 type="text"
@@ -418,16 +511,43 @@ export default function IntercambioP2P() {
               <button className="btn-buy" onClick={enviarMensaje}>Enviar</button>
             </div>
 
+            {/* INPUT DE ARCHIVO (VOUCHER) */}
+           {soyComprador && (
+              <div className="voucher-upload">
+                <input
+                  type="file"
+                  accept="image/*,application/pdf"
+                  onChange={(e) => setVoucherFile(e.target.files?.[0] || null)}
+                />
+                <button className="btn-buy" onClick={enviarVoucher}>
+                  Enviar archivo
+                </button>
+              </div>
+            )}
+
+            {/* BOTONES FINALES */}
             <div className="modal-buttons">
               <button className="btn-cancel" onClick={handleCancelarChat}>Cancelar</button>
               <button className="btn-buy" onClick={handleCompletarChat}>Completado</button>
             </div>
 
           </div>
-
         </div>
       )}
-
+      {/* MODAL DE PREVISUALIZACIÓN DE VOUCHER */}
+      {previewImage && (
+        <div
+          className="preview-overlay"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div className="preview-box" onClick={(e) => e.stopPropagation()}>
+            <button className="preview-close" onClick={() => setPreviewImage(null)}>
+              ✕
+            </button>
+            <img src={previewImage} className="preview-img" alt="voucher full" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -8,6 +8,7 @@ import userRoutes from "./routes/user.js";
 import cryptoRoutes from "./routes/crypto.js";
 import p2pRoutes from "./routes/p2p.js";
 import inversionRoutes from "./routes/inversion.js";
+import path from "path";
 
 dotenv.config();
 const app = express();
@@ -47,10 +48,10 @@ app.use(bodyParser.json());
 
 
 //    Servir imágenes QR subidas
-app.use("/uploads_qr", express.static("uploads_qr"));
+app.use("/uploads_qr", express.static(path.join(process.cwd(), "uploads_qr")));
 
 // Servir comprobantes
-app.use("/uploads_vouchers", express.static("uploads_vouchers"));
+app.use("/uploads_vouchers", express.static(path.join(process.cwd(), "uploads_vouchers")));
 
 // 🔥 RUTAS
 app.use("/api", authRoutes);

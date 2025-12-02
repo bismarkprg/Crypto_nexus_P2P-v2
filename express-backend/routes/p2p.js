@@ -358,7 +358,10 @@ router.get("/p2p/compras/:id/detalle", requireLogin, async (req, res) => {
 
     if (!row) return res.status(404).json({ error: "Compra no encontrada" });
 
-    res.json(row);
+    res.json({
+      ...row,
+      imagen_qr: row.imagen_qr ? String(row.imagen_qr) : null,
+    });
 
   } catch (err) {
     console.error("Error obteniendo detalle:", err);
@@ -373,22 +376,31 @@ router.get("/p2p/compras/:id/detalle", requireLogin, async (req, res) => {
 router.get("/p2p/chat/:id_compra", requireLogin, async (req, res) => {
   try {
     const id_compra = req.params.id_compra;
+    const idUsuarioActual = req.session.userId;
 
-    const [rows] = await pool.query(
-      `SELECT *
+    const [rows] = await pool.execute(
+      `SELECT id_chat, id_compra, id_usuario, mensaje, imagen_voucher, timestamp
        FROM chat_compras
        WHERE id_compra = ?
        ORDER BY timestamp ASC`,
       [id_compra]
     );
 
-    res.json(rows);
+    const mensajes = rows.map((r) => ({
+      id_chat: r.id_chat,
+      mensaje: r.mensaje ? String(r.mensaje) : "",
+      imagen_voucher: r.imagen_voucher ? String(r.imagen_voucher) : null,
+      timestamp: r.timestamp,
+      es_mio: r.id_usuario === idUsuarioActual,   // ✔ ESTA ES LA LÍNEA CLAVE
+    }));
+
+    res.json(mensajes);
 
   } catch (err) {
-    console.error("Error obteniendo chat:", err);
-    res.status(500).json({ error: "Error interno" });
+    res.status(500).json({ message: "Error cargando chat" });
   }
 });
+
 
 /* =====================================================
    ENVIAR MENSAJE DE CHAT
@@ -401,10 +413,10 @@ router.post("/p2p/chat/:id_compra", requireLogin, async (req, res) => {
 
     if (!mensaje) return res.status(400).json({ error: "Mensaje vacío" });
 
-    await pool.query(
-      `INSERT INTO chat_compras (id_compra, emisor, mensaje)
-       VALUES (?, ?, ?)`,
-      [id_compra, emisor, mensaje]
+    await pool.execute(
+      `INSERT INTO chat_compras (id_compra, id_usuario, mensaje, imagen_voucher, es_mio)
+      VALUES (?, ?, ?, ?, ?)`,
+      [id_compra, req.session.userId, mensaje.trim(), null, true]
     );
 
     res.json({ message: "Mensaje enviado" });
@@ -430,32 +442,29 @@ const uploadVoucher = multer({ storage: storageVoucher });
 /* =====================================================
    SUBIR COMPROBANTE AL CHAT
    ===================================================== */
-router.post(
-  "/p2p/chat/:id_compra/voucher",
-  requireLogin,
-  uploadVoucher.single("voucher"),
-  async (req, res) => {
-    try {
-      const id_compra = req.params.id_compra;
-      const emisor = req.session.userId;
-      const file = req.file ? req.file.filename : null;
+router.post("/p2p/chat/:id_compra/voucher", uploadVoucher.single("voucher"), async (req, res) => {
+  try {
+    const id_compra = req.params.id_compra;
 
-      if (!file) return res.status(400).json({ error: "Archivo no subido" });
-
-      await pool.query(
-        `INSERT INTO chat_compras (id_compra, emisor, imagen_voucher)
-         VALUES (?, ?, ?)`,
-        [id_compra, emisor, file]
-      );
-
-      res.json({ message: "Comprobante subido" });
-
-    } catch (err) {
-      console.error("Error subiendo comprobante:", err);
-      res.status(500).json({ error: "Error interno" });
+    if (!req.file) {
+      return res.status(400).json({ message: "No se envió archivo" });
     }
+
+    const filename = req.file.filename;
+
+    await pool.execute(
+      `INSERT INTO chat_compras (id_compra, id_usuario, mensaje, imagen_voucher, es_mio)
+      VALUES (?, ?, ?, ?, ?)`,
+      [id_compra, req.session.userId, null, filename, true]
+    );
+
+    res.json({ message: "Voucher subido", filename });
+  } catch (err) {
+    console.error("Error subiendo voucher:", err);
+    res.status(500).json({ message: "Error subiendo voucher" });
   }
-);
+});
+
 
 /* =====================================================
    COMPLETAR COMPRA (AMBAS PARTES)

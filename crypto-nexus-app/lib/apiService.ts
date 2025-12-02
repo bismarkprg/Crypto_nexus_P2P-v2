@@ -98,6 +98,12 @@ export async function crearCompraP2P(id_publicacion: number, monto_bob: number) 
   return res.data;
 }
 
+export const getUserSession = async () => {
+  const res = await api.get("/dashboard");
+  return res.data;
+};
+
+
 // Solicitudes pendientes para el proveedor
 export async function getSolicitudesP2P() {
   const res = await api.get("/p2p/solicitudes");
@@ -135,4 +141,16 @@ export async function completarCompra(id_compra: number) {
   return res.data;
 }
 
+export const subirVoucher = async (id_compra: number, file: File) => {
+  const formData = new FormData();
+  formData.append("voucher", file);
+
+  const res = await api.post(`/p2p/chat/${id_compra}/voucher`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return res.data;
+};
 

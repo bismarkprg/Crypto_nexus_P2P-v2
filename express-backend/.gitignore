@@ -45,3 +45,7 @@ desktop.ini
 .npm/
 .pnp.*
 *.tmp
+
+# 9. Carpetas de Imagenes de cache
+uploads_qr/
+uploads_vouchers/

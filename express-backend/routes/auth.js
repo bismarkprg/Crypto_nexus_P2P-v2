@@ -57,4 +57,11 @@ router.get("/logout", (req, res) => {
   });
 });
 
+  // GET /auth/user
+  router.get("/user", (req, res) => {
+    if (!req.session || !req.session.userId) {
+      return res.status(401).json({ message: "No autenticado" });
+    }
+    res.json({ id_usuario: req.session.userId });
+  });
 export default router;
