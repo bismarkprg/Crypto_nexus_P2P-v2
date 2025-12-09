@@ -95,7 +95,7 @@ npm install
 
 3️⃣ Crear archivo .env dentro de express-backend/
 PORT=3001
-SESSION_SECRET=tu_clave_segura
+SESSION_SECRET=clave_secreta
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=
