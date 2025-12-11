@@ -126,13 +126,17 @@ cd ../frontend
 npm install
 
 7️⃣ Crear archivo .env.local
+
+FRONTEND_HOST=http://TU_IP_LOCAL:3000
+PORT=3000
+SESSION_SECRET=clave_secreta
 NEXT_PUBLIC_BACKEND_URL=http://TU_IP_LOCAL:3001/api
 
-
 ⚠ Reemplaza TU_IP_LOCAL por tu IP real.
-Si estás usando VirtualBox:
 
-NEXT_PUBLIC_BACKEND_URL=http://192.168.56.1:3001/api
+Solo si estás usando VirtualBox:
+
+NEXT_PUBLIC_BACKEND_URL=http://TU_IP_LOCAL:3001/api
 
 8️⃣ Iniciar frontend
 npm run dev
